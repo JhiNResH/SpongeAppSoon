@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Sponge",
   description: "Multi-VM stablecoin protocol",
   icons: {
-    icon: "/sponge.svg",
+    icon: "/sponge.png",
   },
 };
 
