@@ -24,4 +24,8 @@ yarn-error.log*
 .DS_Store
 
 # Next.js specific files
-*.next/
+*.next/%
+
+# Temporary directories
+SpongeAppSoon_backup/
+temp_sponge_repo/
