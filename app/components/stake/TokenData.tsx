@@ -41,8 +41,8 @@ export default function TokenData({
 
   const getTokenIcon = (symbol: string) => {
     switch (symbol) {
-      case "mvmUSD":
-      case "stmvmUSD":
+      case "svmUSD":
+      case "stsvmUSD":
         return "/cash.png";
       case "USD*":
         return "/usd.png";

@@ -68,7 +68,7 @@ const initialSupportedTokens: TokenInfo[] = [
 
 const initialSupportedBuyTokens: TokenInfo[] = [
   {
-    symbol: "mvmUSD",
+    symbol: "svmUSD",
     mint: CASH_MINT.toBase58(),
     decimals: 6,
     isNative: false,
@@ -109,7 +109,7 @@ const useSwapStore = create<TokenState>((set, get) => ({
         return USDC_MINT;
       case 'USDT':
         return USDT_MINT;
-      case 'mvmUSD':
+      case 'svmUSD':
         return CASH_MINT;
       default:
         const tokenInfo = get().supportedTokens.find(

@@ -103,7 +103,7 @@ export default function UnstakeCard({ callback }: { callback: () => void }) {
         </div>
         <div className="flex justify-between items-center text-gray-dark/70 font-medium">
           <span className="dark:text-gray-400">Current Price</span>
-          <span className="font-bold ml-1">1 mvmUSD = 1 USD</span>
+          <span className="font-bold ml-1">1 svmUSD = 1 USD</span>
         </div>
       </div>
       <Separator.Root className="bg-green-dark w-full h-1" />

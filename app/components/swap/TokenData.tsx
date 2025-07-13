@@ -45,7 +45,7 @@ export default function TokenData({
         return "./usdc.png";
       case "USDT":
         return "./usdt.svg";
-      case "mvmUSD":
+      case "svmUSD":
         return "/cash.png";
       default:
         return "";

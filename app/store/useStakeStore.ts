@@ -32,7 +32,7 @@ interface TokenState {
 // Define initial supported tokens
 const initialSupportedTokens: TokenInfo[] = [
   {
-    symbol: "mvmUSD",
+    symbol: "svmUSD",
     mint: CASH_MINT.toBase58(),
     decimals: 6,
     isNative: false,
@@ -47,7 +47,7 @@ const initialSupportedTokens: TokenInfo[] = [
 
 const initialUnstakeSupportedTokens: TokenInfo[] = [
   {
-    symbol: "stmvmUSD",
+    symbol: "stsvmUSD",
     mint: CASH_MINT.toBase58(),
     decimals: 6,
     isNative: false,
@@ -69,8 +69,8 @@ const useStakeStore = create<TokenState>((set, get) => ({
 
   getTokenMint: (symbol) => {
     switch (symbol) {
-      case "mvmUSD":
-      case "stmvmUSD":
+      case "svmUSD":
+      case "stsvmUSD":
         return CASH_MINT;
       case "USD*":
         return USDC_MINT;

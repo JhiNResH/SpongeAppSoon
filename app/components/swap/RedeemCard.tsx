@@ -133,7 +133,7 @@ export default function SwapCard({ callback }: SwapCardProps) {
         <div className="relative bg-green-dark border-4 border-black px-3 py-2 rounded-3xl">
           <TokenData
             isSwap
-            topText="Selling"
+            topText="Wallet balance"
             symbol={tokenSymbol}
             amount={swapAmount}
             setAmount={setSwapAmount}

@@ -18,7 +18,7 @@ const nanum = Nanum_Pen_Script({
 
 export const metadata: Metadata = {
   title: "Sponge",
-  description: "Multi-VM stablecoin protocol",
+  description: "svmUSD is an overcollateralized dollar backed by diversified crypto assets. Soak up assets and squeeze out sustainable yield.",
   icons: {
     icon: "/Sponge.png",
   },

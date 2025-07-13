@@ -16,10 +16,10 @@ const tabs = [
     label: "Swap",
     value: "swap",
   },
-  // {
-  //   label: "Bridge",
-  //   value: "bridge",
-  // },
+  {
+    label: "Redeem",
+    value: "redeem",
+  },
 ];
 
 export const SwapTabs = () => {
@@ -112,7 +112,7 @@ export const SwapTabs = () => {
         <TabsContent value={"swap"} className="mt-0">
           <SwapCard callback={getBalance} />
         </TabsContent>
-        <TabsContent value={"bridge"} className="mt-0">
+        <TabsContent value={"redeem"} className="mt-0">
           {/* <WithdrawCard connected={connected} callback={fetchDetails} /> */}
         </TabsContent>
       </Tabs>
