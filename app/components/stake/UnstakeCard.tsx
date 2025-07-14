@@ -2,6 +2,7 @@
 
 import { MemeButton } from "../ui/MemeButton";
 import TokenData from "./TokenData";
+import UnstakeReceiveCard from "./UnstakeReceiveCard";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { useState, useEffect, useMemo } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
@@ -10,6 +11,7 @@ import { Separator } from "radix-ui";
 import useStakeStore from "@/store/useStakeStore";
 import toast, { Toaster } from "react-hot-toast";
 import { redeemCash } from "@/lib/stake";
+import { CASH_MINT } from "@/core/setting";
 
 export default function UnstakeCard({ callback }: { callback: () => void }) {
   const {
@@ -26,6 +28,14 @@ export default function UnstakeCard({ callback }: { callback: () => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const currentPrice = 1;
+
+  // Define stsvmUSD token for unstaking
+  const stsvmUSDToken = {
+    symbol: "stsvmUSD",
+    mint: CASH_MINT.toBase58(),
+    decimals: 6,
+    isNative: false,
+  };
 
   // Create connection using useMemo to prevent recreation on every render
   const connection = useMemo(() => {
@@ -80,22 +90,27 @@ export default function UnstakeCard({ callback }: { callback: () => void }) {
         </div>
       )}
       <Toaster position="top-right" />
-      <div className="bg-green-dark border-4 border-black p-3 rounded-3xl">
-        <TokenData
-          isUnstake
-          symbol={selectedToken.symbol}
-          amount={unstakeAmount}
-          setAmount={setUnstakeAmount}
-          value={unstakeValue}
-          setValue={setUnstakeValue}
-          currentPrice={currentPrice}
-          balance={balance}
-          loading={loading || isLoading}
-          selectedToken={selectedToken}
-          setSelectedToken={setSelectedToken}
-          supportedTokens={supportedUnstakeTokens}
-        />
-      </div>
+      <section className="grid gap-4">
+        <div className="relative bg-green-dark border-4 border-black px-3 py-2 rounded-3xl">
+          <TokenData
+            isUnstake
+            symbol="stsvmUSD"
+            amount={unstakeAmount}
+            setAmount={setUnstakeAmount}
+            value={unstakeValue}
+            setValue={setUnstakeValue}
+            currentPrice={currentPrice}
+            balance={balance}
+            loading={loading || isLoading}
+            selectedToken={stsvmUSDToken}
+            setSelectedToken={() => {}} // stsvmUSD is fixed, no need to change
+            supportedTokens={supportedUnstakeTokens}
+            hideSelector={true}
+          />
+          <div className="absolute bottom-[-30px] left-1/2 bg-[url('/swap.png')] bg-contain w-10 h-10 transform -translate-x-1/2" />
+        </div>
+        <UnstakeReceiveCard />
+      </section>
       <div className="-mt-1 space-y-0">
         <div className="flex justify-between items-center text-gray-dark/70 font-medium">
           <span className=" dark:text-gray-400">Supply</span>

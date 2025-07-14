@@ -11,16 +11,17 @@ import { BottomBtn } from "./BottomBtn";
 import useSwapStore, { TokenInfo } from "@/store/useSwapStore";
 import { PoolInfo } from "@/lib/getPoolList";
 import { swap } from "@/lib/swap";
+import { CASH_MINT, USDC_MINT, USDT_MINT } from "@/core/setting";
 
-interface SwapCardProps {
+interface RedeemCardProps {
   callback?: () => void;
 }
 
-export default function SwapCard({ callback }: SwapCardProps) {
+export default function RedeemCard({ callback }: RedeemCardProps) {
   const wallet = useAnchorWallet();
   const { currentNetwork, connected } = useNetworkStore();
-  const [swapAmount, setSwapAmount] = useState(0);
-  const [buyAmount, setBuyAmount] = useState(0);
+  const [redeemAmount, setRedeemAmount] = useState(0);
+  const [receiveAmount, setReceiveAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,49 +46,70 @@ export default function SwapCard({ callback }: SwapCardProps) {
     setSelectedBuyToken,
   } = useSwapStore();
 
+  // Define svmUSD token for redeeming
+  const svmUSDToken: TokenInfo = {
+    symbol: "svmUSD",
+    mint: CASH_MINT.toBase58(),
+    decimals: 6,
+    isNative: false,
+  };
+
+  // Define supported receive tokens (USDC, USDT)
+  const supportedReceiveTokens: TokenInfo[] = [
+    {
+      symbol: "USDC",
+      mint: USDC_MINT.toBase58(),
+      decimals: 6,
+      isNative: false,
+    },
+    {
+      symbol: "USDT",
+      mint: USDT_MINT.toBase58(),
+      decimals: 6,
+      isNative: false,
+    },
+  ];
+
   useEffect(() => {
-    setSwapAmount(0);
+    setRedeemAmount(0);
   }, [selectedToken.symbol]);
 
   useEffect(() => {
-    setBuyAmount(swapAmount);
-  }, [swapAmount])
+    setReceiveAmount(redeemAmount);
+  }, [redeemAmount])
 
   useEffect(() => {
-    setSwapAmount(buyAmount);
-  }, [buyAmount])
+    setRedeemAmount(receiveAmount);
+  }, [receiveAmount])
 
-  const tokenSymbol = selectedToken.symbol;
+  // Set default receive token to USDC on component mount
+  useEffect(() => {
+    if (!selectedBuyToken.symbol) {
+      setSelectedBuyToken(supportedReceiveTokens[0]); // Set USDC as default
+    }
+  }, []);
 
-  const handleSelectToken = (token: TokenInfo) => {
-    setSelectedToken(token);
-    const pool = pools.find(pool => pool.displayName === token.symbol);
-    setSelectedPool(pool ?? {} as PoolInfo);
-    const max = pool?.tokenAAmount ? Number(pool?.tokenAAmount) : 0;
-    setMaxAAmount(max);
+  const handleSelectReceiveToken = (token: TokenInfo) => {
+    setSelectedBuyToken(token);
   }
 
-  const handleSwap = async () => {
+  const handleRedeem = async () => {
     if (!wallet || !connection) {
       setError("Wallet not connected");
       return;
     }
-    if (!selectedToken.symbol) {
-      setError('Select a token');
-      return;
-    }
     if (!selectedBuyToken.symbol) {
-      setError('Select buying token');
+      setError('Select token to receive');
       return;
     }
     if (!selectedPool.mintB || !selectedPool.mintA) {
       setError('Pool is not ready, please try again');
       return;
     }
-    const inputAmount = Math.round(swapAmount);
+    const inputAmount = Math.round(redeemAmount);
 
     if (!inputAmount || inputAmount <= 0) {
-      setError("Please enter a valid stake amount");
+      setError("Please enter a valid redeem amount");
       return;
     }
 
@@ -97,7 +119,7 @@ export default function SwapCard({ callback }: SwapCardProps) {
       const slippageMultiplier = (100 - parseFloat('1.0')) / 100;
       // 确保所有数值都被转换为整数
       const minOutputAmount = Math.round(
-        buyAmount * slippageMultiplier
+        receiveAmount * slippageMultiplier
       );
       await swap(
         wallet,
@@ -110,12 +132,12 @@ export default function SwapCard({ callback }: SwapCardProps) {
         inputAmount,
         minOutputAmount,
       )
-      toast.success("Swap successful!");
+      toast.success("Redeem successful!");
       callback?.();
-      setSwapAmount(0);
+      setRedeemAmount(0);
     } catch (error) {
-      console.error('Swap error', error)
-      setError("Failed to swap. Please try again.");
+      console.error('Redeem error', error)
+      setError("Failed to redeem. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -133,17 +155,18 @@ export default function SwapCard({ callback }: SwapCardProps) {
         <div className="relative bg-green-dark border-4 border-black px-3 py-2 rounded-3xl">
           <TokenData
             isSwap
-            topText="Wallet balance"
-            symbol={tokenSymbol}
-            amount={swapAmount}
-            setAmount={setSwapAmount}
+            topText="Selling"
+            symbol="svmUSD"
+            amount={redeemAmount}
+            setAmount={setRedeemAmount}
             balance={balance || 0}
             maxAmount={maxAAmount}
             loading={loading || isLoading}
-            selectedToken={selectedToken}
-            setSelectedToken={handleSelectToken}
-            supportedTokens={supportedTokens}
+            selectedToken={svmUSDToken}
+            setSelectedToken={() => {}} // svmUSD is fixed, no need to change
+            supportedTokens={[svmUSDToken]}
             showPercentage
+            hideSelector={true}
           />
           <div className="absolute bottom-[-30px] left-1/2 bg-[url('/swap.png')] bg-contain w-10 h-10 transform -translate-x-1/2" />
         </div>
@@ -152,25 +175,25 @@ export default function SwapCard({ callback }: SwapCardProps) {
             isSwap
             hideBalance
             topText="Buying"
-            symbol={tokenSymbol}
-            amount={buyAmount}
-            setAmount={setBuyAmount}
-            balance={(buyAmount || 0) / Math.pow(10, 6)}
+            symbol={selectedBuyToken.symbol || "Select token"}
+            amount={receiveAmount}
+            setAmount={setReceiveAmount}
+            balance={(receiveAmount || 0) / Math.pow(10, 6)}
             maxAmount={maxAAmount}
             loading={loading || isLoading}
             selectedToken={selectedBuyToken}
-            setSelectedToken={setSelectedBuyToken}
-            supportedTokens={supportedBuyTokens}
+            setSelectedToken={handleSelectReceiveToken}
+            supportedTokens={supportedReceiveTokens}
           />
         </div>
       </section>
       <Separator.Root className="bg-green-dark w-full h-1" />
       <BottomBtn
-        text="Swap"
+        text="Redeem"
         loading={loading}
         connected={connected}
-        handleClick={handleSwap}
-        disabled={loading || swapAmount === 0}
+        handleClick={handleRedeem}
+        disabled={loading || redeemAmount === 0}
       />
     </div>
   );

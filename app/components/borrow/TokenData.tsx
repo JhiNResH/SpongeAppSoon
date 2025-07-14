@@ -36,7 +36,7 @@ export default function TokenData({
       case "ETH":
         return "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png";
       case "SOL":
-        return "/solana.png";
+        return "/solana_token.png";
       case "JupSOL":
         return "/jupsol.png";
       case "JitoSOL":

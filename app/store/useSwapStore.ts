@@ -64,6 +64,12 @@ const initialSupportedTokens: TokenInfo[] = [
     decimals: 6,
     isNative: false,
   },
+  {
+    symbol: "SOL",
+    mint: SOL_MINT.toBase58(),
+    decimals: 6,
+    isNative: false,
+  },
 ];
 
 const initialSupportedBuyTokens: TokenInfo[] = [

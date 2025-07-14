@@ -1,17 +1,7 @@
-import { DepositTabs } from "@/components/borrow/BorrowTabs";
+import { redirect } from "next/navigation";
 
-const DepositPage = () => {
-  return (
-    <>
-      <div className="h-full dark:bg-[#030711] text-black dark:text-white mt-20">
-        <main className="w-full p-8">
-          <div className="max-w-xl mx-auto">
-            <DepositTabs />
-          </div>
-        </main>
-      </div>
-    </>
-  );
+const HomePage = () => {
+  redirect("/swap");
 };
 
-export default DepositPage;
+export default HomePage;

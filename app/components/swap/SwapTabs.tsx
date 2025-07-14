@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CardContainer } from "../ui/Container";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import SwapCard from "./SwapCard";
+import RedeemCard from "./RedeemCard";
 import { Connection } from "@solana/web3.js";
 import useNetworkStore from "@/store/useNetworkStore";
 import useSwapStore from "@/store/useSwapStore";
@@ -113,7 +114,7 @@ export const SwapTabs = () => {
           <SwapCard callback={getBalance} />
         </TabsContent>
         <TabsContent value={"redeem"} className="mt-0">
-          {/* <WithdrawCard connected={connected} callback={fetchDetails} /> */}
+          <RedeemCard callback={getBalance} />
         </TabsContent>
       </Tabs>
     </CardContainer>
